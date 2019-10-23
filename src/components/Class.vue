@@ -1,6 +1,11 @@
 <template>
   <div class="hello">
-    <el-table :data="tableData" style="width: 100%" :row-class-name="tableRowClassName">
+    <el-table
+      :data="tableData"
+      @row-click="rowClicked"
+      style="width: 100%"
+      :row-class-name="tableRowClassName"
+    >
       <el-table-column prop="date" label="Date" width="180"></el-table-column>
       <el-table-column prop="name" label="Name" width="180"></el-table-column>
       <el-table-column prop="address" label="Address"></el-table-column>
@@ -19,7 +24,7 @@ values.push({
   address: "No. 189, Grove St, Los Angeles"
 });
 export default {
-  name: "HelloWorld",
+  name: "Class",
   props: {
     msg: String
   },
@@ -33,6 +38,10 @@ export default {
       console.log(row);
 
       return "";
+    },
+    rowClicked(row) {
+      console.log("clicked");
+      console.log(row.rowIndex);
     }
   },
   data() {
