@@ -1,11 +1,7 @@
 export const state = {
-  products: [],
-  bundles: [],
-  cards: []
+  classes: []
 };
 
 export const getters = {
-  getProducts: state => state.products,
-  getBundles: state => state.bundles,
-  getCards: state => state.cards
+  getClasses: state => state.classes
 };

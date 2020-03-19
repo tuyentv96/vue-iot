@@ -18,13 +18,13 @@ const routes = [
     component: Home
   },
   {
-    path: '/devices',
+    path: '/classes/:classID/devices',
     name: 'devices',
     component: Device
   },
   {
-    path: '/deviceDetail',
-    name: 'devices',
+    path: '/classes/:classID/devices/:deviceID',
+    name: 'device_details',
     component: DeviceDetail
   },
   {
