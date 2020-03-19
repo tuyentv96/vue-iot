@@ -61,7 +61,7 @@
                 </el-container>
               </el-tab-pane>
 
-              <el-tab-pane class="tab_content" label="Atrribute">
+              <el-tab-pane class="tab_content" label="Atrribute" style="width: 1000px">
                 <div>
                   <el-table :data="attrValues">
                     <el-table-column prop="attributeName" label="attributeName"></el-table-column>

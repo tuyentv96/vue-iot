@@ -1,7 +1,11 @@
 export const state = {
-  classes: []
+  classes: [],
+  class: {},
+  attrs: []
 };
 
 export const getters = {
-  getClasses: state => state.classes
+  getClasses: state => state.classes,
+  getClass: state => state.class,
+  getAttrs: state => state.attrs
 };

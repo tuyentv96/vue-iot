@@ -1,5 +1,10 @@
   {
     "env": {
-      "VUE_APP_URL": "https://wf.tuyentv.xyz/api"
+      "VUE_APP_URL": "https://wf.ttgroup.xyz/api"
+    },
+    "build": {
+      "env": {
+        "VUE_APP_URL": "https://wf.ttgroup.xyz/api"
+      }
     }
   }

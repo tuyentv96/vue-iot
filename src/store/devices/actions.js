@@ -46,4 +46,20 @@ export const actions = {
         commit(MUTATE_ATTR_VALUE_LIST, res.data);
       });
   },
+  actCreateDevice(noneUse, payload) {
+    let classID = payload.classID;
+    return axios
+      .post(
+        `${process.env.VUE_APP_URL}/classes/${classID}/devices`,
+        payload
+      )
+  },
+  actCreateAttribute(noneUse, payload) {
+    let classID = payload.classID;
+    return axios
+      .post(
+        `${process.env.VUE_APP_URL}/classes/${classID}/attributes`,
+        payload
+      )
+  }
 };

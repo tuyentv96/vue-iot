@@ -1,13 +1,134 @@
 <template>
   <div class="hello">
-    <el-table :data="devices" @row-click="rowClicked" style="width: 100%">
-      <el-table-column prop="ID" label="ID" sortable></el-table-column>
-      <el-table-column prop="name" label="Name"></el-table-column>
-      <el-table-column prop="type" label="Type"></el-table-column>
-      <el-table-column prop="accessToken" label="Access Token"></el-table-column>
-      <el-table-column prop="createdAt" label="Created At"></el-table-column>
-      <el-table-column prop="updatedAt" label="Updated At"></el-table-column>
-    </el-table>
+    <div>
+      <el-dialog title="Create Device" :visible.sync="dialogFormVisible">
+        <el-form :model="newDevice">
+          <el-form-item label="Name" :label-width="'50'">
+            <el-input v-model="newDevice.name" autocomplete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="Type" :label-width="'120'">
+            <el-select v-model="newDevice.Type" placeholder="Please select a Type">
+              <el-option label="Thing" value="Thing"></el-option>
+              <el-option label="Gateway" value="Gateway"></el-option>
+            </el-select>
+          </el-form-item>
+        </el-form>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="dialogFormVisible = false">Cancel</el-button>
+          <el-button @click="createDevice" type="primary">Confirm</el-button>
+        </span>
+      </el-dialog>
+    </div>
+
+    <el-row id="content">
+      <el-tabs style="width: 100%">
+        <el-tab-pane label="Properties">
+          <el-container>
+            <el-form label-width="200">
+              <el-form-item label="Name">
+                <el-input v-model="classObj.name"></el-input>
+              </el-form-item>
+              <el-form-item label="Created At">
+                <span>{{classObj.createdAt}}</span>
+              </el-form-item>
+              <el-form-item label="Updated At">
+                <span>{{classObj.updatedAt}}</span>
+              </el-form-item>>
+              <div style="margin-top: 50px">
+                <el-button
+                  v-loading.fullscreen.lock="fullscreenLoading"
+                  @click="saveClass"
+                  type="primary"
+                >Save</el-button>
+              </div>
+            </el-form>
+          </el-container>
+        </el-tab-pane>
+
+        <el-tab-pane class="tab_content" label="Attribute" style="width: 1000px">
+          <el-container>
+            <el-table :data="attrs" style="width: 100%">
+              <el-table-column prop="ID" label="ID" sortable></el-table-column>
+              <el-table-column prop="name" label="Name"></el-table-column>
+              <el-table-column prop="displayName" label="displayName"></el-table-column>
+              <el-table-column prop="attributeType" label="attributeType"></el-table-column>
+              <el-table-column prop="dataType" label="dataType"></el-table-column>
+              <el-table-column prop="createdAt" label="Created At"></el-table-column>
+              <el-table-column prop="updatedAt" label="Updated At"></el-table-column>
+            </el-table>
+          </el-container>
+
+          <el-row style="margin-top: 30px">
+            <el-row style="text-align: left; font-size: 10px;  font-weight: bold;">
+              <el-col class="attr_item_col" :span="4">
+                <span>Name</span>
+              </el-col>
+              <el-col class="attr_item_col" :span="4">
+                <span>Display Name</span>
+              </el-col>
+              <el-col class="attr_item_col" :span="4">
+                <span>Aattribute Type</span>
+              </el-col>
+              <el-col class="attr_item_col" :span="4">
+                <span>Data Type</span>
+              </el-col>
+            </el-row>
+
+            <el-row>
+              <el-col class="attr_item_col" :span="4">
+                <el-input placeholder="Please input" v-model="attribute.name"></el-input>
+              </el-col>
+              <el-col class="attr_item_col" :span="4">
+                <el-input placeholder="Please input" v-model="attribute.displayName"></el-input>
+              </el-col>
+              <el-col class="attr_item_col" :span="4">
+                <el-select v-model="attribute.attributeType" placeholder="Select">
+                  <el-option
+                    v-for="item in attrTypeOptions"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                  ></el-option>
+                </el-select>
+              </el-col>
+              <el-col class="attr_item_col" :span="4">
+                <el-select v-model="attribute.dataType" placeholder="Select">
+                  <el-option
+                    v-for="item in dataTypeOptions"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                  ></el-option>
+                </el-select>
+              </el-col>
+            </el-row>
+
+            <el-row style="margin: auto; padding-top: 20px;">
+              <el-button @click="updateAttributes" type="primary">Update</el-button>
+            </el-row>
+          </el-row>
+        </el-tab-pane>
+
+        <el-tab-pane class="tab_content" label="Devices" style="width: 1000px">
+          <el-row style="float: right">
+            <el-button type="primary" @click="dialogFormVisible = true">Create</el-button>
+          </el-row>
+          <div>
+            <el-table :data="devices" @row-click="rowClicked" style="width: 100%">
+              <el-table-column prop="ID" label="ID" sortable></el-table-column>
+              <el-table-column prop="name" label="Name"></el-table-column>
+              <el-table-column prop="type" label="Type"></el-table-column>
+              <el-table-column prop="accessToken" label="Access Token"></el-table-column>
+              <el-table-column prop="createdAt" label="Created At"></el-table-column>
+              <el-table-column prop="updatedAt" label="Updated At"></el-table-column>
+            </el-table>
+            <div style="float:right;margin-top:30px">
+              <el-pagination background layout="prev, pager, next" :total="attributeTotal"></el-pagination>
+            </div>
+          </div>
+        </el-tab-pane>
+      </el-tabs>
+    </el-row>
   </div>
 </template>
 
@@ -21,11 +142,28 @@ export default {
   },
   methods: {
     ...mapActions({
-      actFetchDevices: "actFetchDevices"
+      actFetchDevices: "actFetchDevices",
+      actCreateDevice: "actCreateDevice",
+      actFetchClassByID: "actFetchClassByID",
+      actFetchAttributesByClassID: "actFetchAttributesByClassID",
+      actCreateAttribute: "actCreateAttribute"
     }),
+    saveClass() {},
+    createDevice() {
+      console.log("new:", this.newDevice);
+      this.actCreateDevice(this.newDevice).then(() => {
+        this.dialogFormVisible = false;
+        this.actFetchDevices(this.$route.params.classID);
+      });
+    },
+    updateAttributes() {
+      this.attribute.classID = this.$route.params.classID;
+      this.actCreateAttribute(this.attribute).then(() => {
+        this.attribute = {};
+        this.actFetchAttributesByClassID(this.$route.params.classID);
+      });
+    },
     rowClicked(row) {
-      console.log("clicked");
-      console.log(row);
       this.$router.push({
         name: "device_details",
         params: { classID: row.classID, deviceID: row.ID }
@@ -33,24 +171,72 @@ export default {
     }
   },
   created() {
+    this.actFetchClassByID(this.$route.params.classID);
     this.actFetchDevices(this.$route.params.classID);
+    this.actFetchAttributesByClassID(this.$route.params.classID);
   },
   data() {
-    return {};
+    return {
+      attribute: {
+        attributeType: "",
+        dataType: "",
+        name: "",
+        displayName: ""
+      },
+      attrTypeOptions: [
+        {
+          value: "state",
+          label: "State"
+        },
+        {
+          value: "timeseries",
+          label: "Timeseries"
+        }
+      ],
+      dataTypeOptions: [
+        {
+          value: "Number",
+          label: "Number"
+        },
+        {
+          value: "String",
+          label: "String"
+        },
+        {
+          value: "Boolean",
+          label: "Boolean"
+        },
+        {
+          value: "Email",
+          label: "Email"
+        }
+      ],
+      attributeTotal: 10,
+      fullscreenLoading: false,
+      dialogFormVisible: false,
+      newDevice: {
+        name: "",
+        type: "Thing",
+        classID: this.$route.params.classID
+      }
+    };
   },
   computed: mapGetters({
-    devices: "getDevices"
+    devices: "getDevices",
+    classObj: "getClass",
+    attrs: "getAttrs"
   })
 };
 </script>
 
 
 <style>
-.el-table .warning-row {
-  background: oldlace;
+#content {
+  margin-top: 30px;
+  margin-left: 200px;
 }
 
-.el-table .success-row {
-  background: #f0f9eb;
+.attr_item_col {
+  margin: 0px 0 0px 25px;
 }
 </style>
