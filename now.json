@@ -1,0 +1,5 @@
+  {
+    "env": {
+      "VUE_APP_URL": "https://wf.tuyentv.xyz/api"
+    }
+  }
