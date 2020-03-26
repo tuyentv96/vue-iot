@@ -265,7 +265,7 @@ export default {
 </script>
 
 
-<style lang="scss">
+<style>
 /* #content {
   margin-top: 30px;
   /* margin-left: 200px; */

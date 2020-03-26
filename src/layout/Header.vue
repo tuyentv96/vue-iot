@@ -16,7 +16,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style>
 .header__logo-wrapper {
   height: 150px;
   background-color: white;

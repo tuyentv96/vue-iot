@@ -32,14 +32,89 @@
 
           <el-tab-pane class="tab_content" label="Actions">
             <div>
-              <el-table :data="actions">
+              <!-- <el-table :data="actions">
                 <el-table-column prop="ID" label="ID"></el-table-column>
                 <el-table-column prop="actionType" label="actionType"></el-table-column>
                 <el-table-column prop="triggerQuantifier" label="triggerQuantifier"></el-table-column>
+                <el-table-column label="data">
+                  <div>{{actionData.System_ConsoleData}}</div>
+                </el-table-column>
                 <el-table-column prop="acceptActionID" label="Accept ActionID"></el-table-column>
                 <el-table-column prop="createdAt" label="createdAt"></el-table-column>
                 <el-table-column prop="updatedAt" label="updatedAt"></el-table-column>
-              </el-table>
+              </el-table>-->
+              <el-row class="element__row-customized" style="font-family: 'Gotham-Bold'">
+                <el-col :span="2">
+                  <div>
+                    <h4>ID</h4>
+                  </div>
+                </el-col>
+                <el-col :span="6">
+                  <div>
+                    <h4>actionType</h4>
+                  </div>
+                </el-col>
+                <el-col :span="3">
+                  <div>
+                    <h4>triggerQuantifier</h4>
+                  </div>
+                </el-col>
+                <el-col :span="6">
+                  <div>
+                    <h4>data</h4>
+                  </div>
+                </el-col>
+                <el-col :span="3">
+                  <div>
+                    <h4>
+                      CREATED
+                      <span class="el-icon-caret-bottom"></span>
+                    </h4>
+                  </div>
+                </el-col>
+              </el-row>
+
+              <el-row
+                class="element__row-customized"
+                v-for="action in actions"
+                v-bind:key="action.ID"
+              >
+                <el-col :span="2">
+                  <div>
+                    <p>{{ action.ID }}</p>
+                  </div>
+                </el-col>
+                <el-col :span="6">
+                  <div>
+                    <p>{{ action.actionType }}</p>
+                  </div>
+                </el-col>
+                <el-col :span="3">
+                  <div>
+                    <p>{{ action.triggerQuantifier }}</p>
+                  </div>
+                </el-col>
+                <el-col :span="6">
+                  <div v-if="action.actionType == 'Console'">
+                    <c-console :data="action.actionData.System_ConsoleData"></c-console>
+                  </div>
+                  <div v-if="action.actionType == 'GoTo'">
+                    <p>{{ action.acceptActionID}}</p>
+                  </div>
+                  <div v-if="action.actionType == 'SendEmail'">
+                    <!-- <p>{{ action.actionData.System_EmailData}}</p> -->
+                    <c-email :data="action.actionData.System_EmailData"></c-email>
+                  </div>
+                  <div v-if="action.actionType == 'Branch'">
+                    <c-branch :data="action.actionData.System_BranchData"></c-branch>
+                  </div>
+                </el-col>
+                <el-col :span="3">
+                  <div>
+                    <p style="white-space: pre">{{ action.createdAt | formatDate}}</p>
+                  </div>
+                </el-col>
+              </el-row>
             </div>
           </el-tab-pane>
 
@@ -57,11 +132,17 @@
 <script>
 import { mapGetters, mapActions } from "vuex";
 import TreeChart from "vue-tree-chart";
+import CConsole from "@/components/Console.vue";
+import CEmail from "@/components/Email.vue";
+import CBranch from "@/components/Branch.vue";
 
 export default {
   name: "DeviceDetail",
   components: {
-    TreeChart
+    TreeChart,
+    [CConsole.name]: CConsole,
+    [CEmail.name]: CEmail,
+    [CBranch.name]: CBranch
   },
   methods: {
     ...mapActions({
