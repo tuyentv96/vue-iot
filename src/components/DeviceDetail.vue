@@ -1,85 +1,52 @@
 <template>
   <div class="container">
     <el-row>
-      <el-col id="left-nav" :span="3">
-        <el-menu default-active="2" class="el-menu-vertical-demo">
-          <el-menu-item index="2">
-            <i class="el-icon-menu"></i>
-            <span>Navigator Two</span>
-          </el-menu-item>
-          <el-menu-item index="3">
-            <i class="el-icon-document"></i>
-            <span>Navigator Three</span>
-          </el-menu-item>
-          <el-menu-item index="4">
-            <i class="el-icon-setting"></i>
-            <span>Navigator Four</span>
-          </el-menu-item>
-        </el-menu>
-      </el-col>
-      <el-col id="right-content" :span="18" style="margin-top: 30px">
-        <div>
-          <el-breadcrumb separator-class="el-icon-arrow-right">
-            <el-breadcrumb-item :to="{ path: '/' }">homepage</el-breadcrumb-item>
-            <el-breadcrumb-item>promotion management</el-breadcrumb-item>
-            <el-breadcrumb-item>promotion list</el-breadcrumb-item>
-            <el-breadcrumb-item>promotion detail</el-breadcrumb-item>
-          </el-breadcrumb>
-        </div>
-        <el-container id="con">
-          <el-container>
-            <el-tabs style="width: 100%">
-              <el-tab-pane label="Properties">
-                <el-container>
-                  <el-form label-width="auto">
-                    <el-form-item label="Name">
-                      <el-input v-model="device.name"></el-input>
-                    </el-form-item>
-                    <el-form-item label="Access Token">
-                      <el-input v-model="device.accessToken"></el-input>
-                    </el-form-item>
-                    <el-form-item label="ClassID">
-                      <span>{{device.classID}}</span>
-                    </el-form-item>
-                    <el-form-item label="Type">
-                      <span>{{device.type}}</span>
-                    </el-form-item>
-                    <el-form-item label="Created At">
-                      <span>{{device.createdAt}}</span>
-                    </el-form-item>
-                    <el-form-item label="Updated At">
-                      <span>{{device.updatedAt}}</span>
-                    </el-form-item>
-                    <div style="margin-top: 50px">
-                      <el-button
-                        v-loading.fullscreen.lock="fullscreenLoading"
-                        @click="saveDevice"
-                        type="primary"
-                      >Save</el-button>
-                    </div>
-                  </el-form>
-                </el-container>
-              </el-tab-pane>
+      <el-col id="content">
+        <el-tabs style="width: 100%">
+          <el-tab-pane class="tab_content" label="Properties">
+            <el-form label-width="auto">
+              <el-form-item label="Name">
+                <el-input v-model="device.name"></el-input>
+              </el-form-item>
+              <el-form-item label="Access Token">
+                <el-input v-model="device.accessToken"></el-input>
+              </el-form-item>
+              <el-form-item label="ClassID">
+                <span>{{device.classID}}</span>
+              </el-form-item>
+              <el-form-item label="Type">
+                <span>{{device.type}}</span>
+              </el-form-item>
+              <el-form-item label="Created At">
+                <span>{{device.createdAt | formatDate}}</span>
+              </el-form-item>
+              <el-form-item label="Updated At">
+                <span>{{device.updatedAt | formatDate}}</span>
+              </el-form-item>
+              <div style="margin-top: 50px">
+                <el-button
+                  v-loading.fullscreen.lock="fullscreenLoading"
+                  @click="saveDevice"
+                  type="primary"
+                >Save</el-button>
+              </div>
+            </el-form>
+          </el-tab-pane>
 
-              <el-tab-pane class="tab_content" label="Atrribute" style="width: 1000px">
-                <div>
-                  <el-table :data="attrValues">
-                    <el-table-column prop="attributeName" label="attributeName"></el-table-column>
-                    <el-table-column prop="value" label="value"></el-table-column>
-                    <el-table-column prop="createdAt" label="createdAt"></el-table-column>
-                    <el-table-column prop="updatedAt" label="updatedAt"></el-table-column>
-                  </el-table>
-                  <div style="float:right;margin-top:30px">
-                    <el-pagination background layout="prev, pager, next" :total="attributeTotal"></el-pagination>
-                  </div>
-                </div>
-              </el-tab-pane>
-            </el-tabs>
-          </el-container>
-          <el-aside id="right_aside" width="100px">
-            <div>Device Logs</div>
-          </el-aside>
-        </el-container>
+          <el-tab-pane class="tab_content" label="Atrribute">
+            <div>
+              <el-table :data="attrValues">
+                <el-table-column prop="attributeName" label="attributeName"></el-table-column>
+                <el-table-column prop="value" label="value"></el-table-column>
+                <el-table-column prop="createdAt" label="createdAt"></el-table-column>
+                <el-table-column prop="updatedAt" label="updatedAt"></el-table-column>
+              </el-table>
+              <div style="float:right;margin-top:30px">
+                <el-pagination background layout="prev, pager, next" :total="attributeTotal"></el-pagination>
+              </div>
+            </div>
+          </el-tab-pane>
+        </el-tabs>
       </el-col>
     </el-row>
   </div>
@@ -146,7 +113,10 @@ export default {
 </script>
 
 <style>
-#left-nav {
+.tab_content {
+  margin: 0 auto;
+}
+/* #left-nav {
   margin-top: 80px;
 }
 
@@ -155,9 +125,7 @@ export default {
   padding: 20px;
   text-align: left;
 }
-.tab_content {
-  margin: 0 auto;
-}
+
 
 .el-container {
   margin: auto;
@@ -180,5 +148,5 @@ export default {
 #right-content {
   margin-top: 30px;
   margin-left: 20px;
-}
+} */
 </style>

@@ -1,9 +1,10 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Class.vue'
-import Device from '../views/Device.vue'
+import ClassDetail from '../views/ClassDetail.vue'
 import DeviceDetail from '../views/DeviceDetail.vue'
-
+// import Workflow from '../views/Workflow.vue'
+import WorkflowDetail from '../views/WorkflowDetail'
 Vue.use(VueRouter)
 
 const routes = [
@@ -18,14 +19,19 @@ const routes = [
     component: Home
   },
   {
-    path: '/classes/:classID/devices',
+    path: '/classes/:classID',
     name: 'devices',
-    component: Device
+    component: ClassDetail
   },
   {
     path: '/classes/:classID/devices/:deviceID',
     name: 'device_details',
     component: DeviceDetail
+  },
+  {
+    path: '/classes/:classID/workflows/:workflowID',
+    name: 'workflow',
+    component: WorkflowDetail
   },
   {
     path: '/about',

@@ -1,8 +1,25 @@
 <template>
   <div id="app">
-    <router-view />
+    <l-header class="header__banner" />
+    <!-- <l-header class="header__banner" /> -->
+
+    <div id="main">
+      <l-main />
+    </div>
   </div>
 </template>
+
+<script>
+import LMain from "./layout/Main.vue";
+import LHeader from "./layout/Header.vue";
+export default {
+  name: "app",
+  components: {
+    [LMain.name]: LMain,
+    [LHeader.name]: LHeader
+  }
+};
+</script>
 
 <style>
 #app {
@@ -13,16 +30,7 @@
   color: #2c3e50;
 }
 
-#nav {
-  padding: 30px;
-}
-
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
+#main {
+  margin: 0 15%;
 }
 </style>

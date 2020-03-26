@@ -1,7 +1,7 @@
 <template>
   <div class="hello">
     <div>
-      <el-button type="primary" @click="dialogFormVisible = true">Create</el-button>
+      <el-button type="primary" @click="dialogFormVisible = true" style="float: right">Create</el-button>
     </div>
     <div>
       <el-dialog title="Create Class" :visible.sync="dialogFormVisible">

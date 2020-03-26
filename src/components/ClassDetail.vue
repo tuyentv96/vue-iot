@@ -21,7 +21,7 @@
     </div>
 
     <el-row id="content">
-      <el-tabs style="width: 100%">
+      <el-tabs>
         <el-tab-pane label="Properties">
           <el-container>
             <el-form label-width="200">
@@ -34,7 +34,7 @@
               <el-form-item label="Updated At">
                 <span>{{classObj.updatedAt}}</span>
               </el-form-item>>
-              <div style="margin-top: 50px">
+              <div>
                 <el-button
                   v-loading.fullscreen.lock="fullscreenLoading"
                   @click="saveClass"
@@ -45,7 +45,7 @@
           </el-container>
         </el-tab-pane>
 
-        <el-tab-pane class="tab_content" label="Attribute" style="width: 1000px">
+        <el-tab-pane class="tab_content" label="Attribute">
           <el-container>
             <el-table :data="attrs" style="width: 100%">
               <el-table-column prop="ID" label="ID" sortable></el-table-column>
@@ -109,20 +109,57 @@
           </el-row>
         </el-tab-pane>
 
-        <el-tab-pane class="tab_content" label="Devices" style="width: 1000px">
+        <el-tab-pane class="tab_content" label="Devices">
           <el-row style="float: right">
             <el-button type="primary" @click="dialogFormVisible = true">Create</el-button>
           </el-row>
           <div>
-            <el-table :data="devices" @row-click="rowClicked" style="width: 100%">
+            <el-table :data="devices" style="width: 100%">
               <el-table-column prop="ID" label="ID" sortable></el-table-column>
-              <el-table-column prop="name" label="Name"></el-table-column>
+              <el-table-column label="Name">
+                <template slot-scope="scope">
+                  <router-link
+                    :to="{ name: 'device_details', params: { classID: classID, deviceID: scope.row.ID }}"
+                  >
+                    <p>{{ scope.row.name }}</p>
+                  </router-link>
+                  <!-- <span>{{ scope.row.name }}</span> -->
+                </template>
+              </el-table-column>
               <el-table-column prop="type" label="Type"></el-table-column>
               <el-table-column prop="accessToken" label="Access Token"></el-table-column>
               <el-table-column prop="createdAt" label="Created At"></el-table-column>
               <el-table-column prop="updatedAt" label="Updated At"></el-table-column>
             </el-table>
-            <div style="float:right;margin-top:30px">
+            <div style="float:right; margin-top:30px">
+              <el-pagination background layout="prev, pager, next" :total="attributeTotal"></el-pagination>
+            </div>
+          </div>
+        </el-tab-pane>
+
+        <el-tab-pane class="tab_content" label="Workflow">
+          <el-row style="float: right">
+            <el-button type="primary" @click="dialogFormVisible = true">Create</el-button>
+          </el-row>
+          <div>
+            <el-table :data="workflows" style="width: 100%">
+              <el-table-column prop="ID" label="ID" sortable></el-table-column>
+              <el-table-column label="Name">
+                <template slot-scope="scope">
+                  <router-link
+                    :to="{ name: 'workflow', params: { classID: classID, workflowID: scope.row.ID }}"
+                  >
+                    <p>{{ scope.row.name }}</p>
+                  </router-link>
+                  <!-- <span>{{ scope.row.name }}</span> -->
+                </template>
+              </el-table-column>
+              <el-table-column prop="enable" label="Enable"></el-table-column>
+              <el-table-column prop="initialAction" label="Inital Action"></el-table-column>
+              <el-table-column prop="createdAt" label="Created At"></el-table-column>
+              <el-table-column prop="updatedAt" label="Updated At"></el-table-column>
+            </el-table>
+            <div style="float:right; margin-top:30px">
               <el-pagination background layout="prev, pager, next" :total="attributeTotal"></el-pagination>
             </div>
           </div>
@@ -136,7 +173,7 @@
 import { mapGetters, mapActions } from "vuex";
 
 export default {
-  name: "Devices",
+  name: "ClassDetail",
   props: {
     msg: String
   },
@@ -146,7 +183,8 @@ export default {
       actCreateDevice: "actCreateDevice",
       actFetchClassByID: "actFetchClassByID",
       actFetchAttributesByClassID: "actFetchAttributesByClassID",
-      actCreateAttribute: "actCreateAttribute"
+      actCreateAttribute: "actCreateAttribute",
+      actFetchWorkflowsByClassID: "actFetchWorkflowsByClassID"
     }),
     saveClass() {},
     createDevice() {
@@ -162,21 +200,17 @@ export default {
         this.attribute = {};
         this.actFetchAttributesByClassID(this.$route.params.classID);
       });
-    },
-    rowClicked(row) {
-      this.$router.push({
-        name: "device_details",
-        params: { classID: row.classID, deviceID: row.ID }
-      });
     }
   },
   created() {
     this.actFetchClassByID(this.$route.params.classID);
     this.actFetchDevices(this.$route.params.classID);
     this.actFetchAttributesByClassID(this.$route.params.classID);
+    this.actFetchWorkflowsByClassID(this.$route.params.classID);
   },
   data() {
     return {
+      classID: this.$route.params.classID,
       attribute: {
         attributeType: "",
         dataType: "",
@@ -224,19 +258,26 @@ export default {
   computed: mapGetters({
     devices: "getDevices",
     classObj: "getClass",
-    attrs: "getAttrs"
+    attrs: "getAttrs",
+    workflows: "getWorkflows"
   })
 };
 </script>
 
 
-<style>
-#content {
+<style lang="scss">
+/* #content {
   margin-top: 30px;
-  margin-left: 200px;
-}
+  /* margin-left: 200px; */
+/* } */
 
-.attr_item_col {
+/* .attr_item_col {
   margin: 0px 0 0px 25px;
+} */
+.element__row-customized {
+  border-bottom: 1px solid #e7e7e7;
+}
+.element__row-customized:nth-child(even) {
+  background-color: #fafaf9;
 }
 </style>

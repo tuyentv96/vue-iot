@@ -1,17 +1,17 @@
 <template>
   <div class="home">
-    <Device msg="Welcome to Your Vue.js App" />
+    <WorkflowDetail />
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
-import Device from "@/components/Device.vue";
+import WorkflowDetail from "@/components/WorkflowDetail.vue";
 
 export default {
   name: "home",
   components: {
-    Device
+    WorkflowDetail
   }
 };
 </script>
