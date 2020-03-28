@@ -1,25 +1,33 @@
 <template>
   <div>
-    <el-row :gutter="4">
-      <el-col :span="10">
-        <el-input placeholder="Please input"></el-input>
-      </el-col>
+    <el-row>
+      <div class="mySlides" v-for="(exp) in exps" v-bind:key="exp.ID">
+        <el-row :gutter="4">
+          <el-col :span="10">
+            <!-- <el-input placeholder="Please input"></el-input> -->
+            <p>{{exp.var}}</p>
+          </el-col>
 
-      <el-col :span="4">
-        <el-dropdown>
-          <span class="el-dropdown-link">List</span>
-          <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item>Action 1</el-dropdown-item>
-            <el-dropdown-item>Action 2</el-dropdown-item>
-            <el-dropdown-item>Action 3</el-dropdown-item>
-          </el-dropdown-menu>
-        </el-dropdown>
-      </el-col>
+          <el-col :span="4">
+            <!-- <el-dropdown>
+              <span class="el-dropdown-link">List</span>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item>Action 1</el-dropdown-item>
+                <el-dropdown-item>Action 2</el-dropdown-item>
+                <el-dropdown-item>Action 3</el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>-->
+            <p>{{exp.op}}</p>
+          </el-col>
 
-      <el-col :span="10">
-        <el-input placeholder="input"></el-input>
-      </el-col>
+          <el-col :span="10">
+            <!-- <el-input placeholder="input"></el-input> -->
+            <p>{{exp.val}}</p>
+          </el-col>
+        </el-row>
+      </div>
     </el-row>
+
     <el-row>
       <el-button @click="addExp" type="primary">Confirm</el-button>
     </el-row>
@@ -68,7 +76,8 @@ export default {
   props: ["condition", "attrs"],
   data() {
     return {
-      input: ""
+      input: "",
+      exps: []
     };
   },
   methods: {
@@ -78,29 +87,30 @@ export default {
     addExp() {
       console.log("Add exp");
       let newCondition;
-      if (this.condition.rules) {
-        this.condition.rules.push({
-          var: "",
-          op: "",
-          val: ""
-        });
-        newCondition = this.condition;
-      } else {
-        newCondition = {
-          comparator: "&&",
-          rules: [
-            { ...this.condition },
-            {
-              op: "",
-              val: "",
-              var: ""
-            }
-          ]
-        };
-      }
+      // if (!this.condition.rules) {
+      //   this.condition.rules.push({
+      //     var: "",
+      //     op: "",
+      //     val: ""
+      //   });
+      //   newCondition = this.condition;
+      // } else {
+      newCondition = {
+        comparator: "&&",
+        rules: [
+          { ...this.condition },
+          {
+            op: "",
+            val: "",
+            var: ""
+          }
+        ]
+      };
+      //}
 
       console.log(newCondition);
       this.condition = newCondition;
+      this.renderCond();
     },
     subExp(path) {
       if (this.condition.rules) {
@@ -130,23 +140,36 @@ export default {
           const subPath = path ? path.slice(0) : [];
           subPath.push("rules");
           subPath.push(i);
-          console.log("rule:", rule);
-          console.log("subPath:", subPath);
-          console.log("quantifierSelector:", quantifierSelector);
+          // console.log("rule:", rule);
+          // console.log("subPath:", subPath);
+          // console.log("quantifierSelector:", quantifierSelector);
           return this.explainCond(rule, quantifierSelector, true, subPath);
         });
       } else {
         const { var: Var, op: Op, val: Val } = comp;
-        console.log(Var, Op, Val);
-        console.log("Array.isArray(comp.rules):", Array.isArray(comp.rules));
-        console.log("comp:", comp);
+        console.log("comp:", Var, Op, Val);
+        console.log("quan:", quantifier);
+        console.log("ptype:", this.getTypeParam(Var));
+        this.exps.push({
+          quantifier: quantifier,
+          var: Var,
+          op: Op,
+          val: Val
+        });
+        console.log("exps:", this.exps);
+        // console.log("Array.isArray(comp.rules):", Array.isArray(comp.rules));
+        // console.log("comp:", comp);
       }
     },
-    getTypeParam(paramName) {
-      const res = this.attrs.find(param => param.name === paramName);
+    renderCond() {
+      this.explainCond(this.condition, undefined, false, []);
+    },
+    getTypeParam(attrName) {
+      console.log("attrs:", this.attrs);
+      const res = this.attrs.find(attr => attr.name === attrName);
 
-      if (res && res.type) {
-        return res.type;
+      if (res && res.dataType) {
+        return res.dataType;
       }
       return "";
     },

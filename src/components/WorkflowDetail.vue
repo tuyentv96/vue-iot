@@ -147,7 +147,8 @@ export default {
   methods: {
     ...mapActions({
       actFetchWorkflowByID: "actFetchWorkflowByID",
-      actFetchActionsByWorkflowID: "actFetchActionsByWorkflowID"
+      actFetchActionsByWorkflowID: "actFetchActionsByWorkflowID",
+      actFetchAttributesByClassID: "actFetchAttributesByClassID"
     }),
     saveWorkflow() {}
   },
@@ -156,7 +157,8 @@ export default {
       classID: this.$route.params.classID,
       workflowID: this.$route.params.workflowID
     }),
-      this.actFetchActionsByWorkflowID(this.$route.params.workflowID);
+      this.actFetchActionsByWorkflowID(this.$route.params.workflowID),
+      this.actFetchAttributesByClassID(this.$route.params.classID);
   },
   data() {
     return {
