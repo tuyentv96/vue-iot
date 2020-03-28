@@ -1,13 +1,13 @@
 <template>
   <div class="branch__wrapper">
-    <el-col :span="17">
-      <c-option :option="data" />
+    <el-col>
+      <c-condition :condition="data" />
     </el-col>
   </div>
 </template>
 
 <script>
-import COption from "@/components/Option.vue";
+import CCondition from "@/components/Condition.vue";
 import { Row, Col } from "element-ui";
 
 export default {
@@ -15,13 +15,16 @@ export default {
   components: {
     [Row.name]: Row,
     [Col.name]: Col,
-    [COption.name]: COption
+    [CCondition.name]: CCondition
   },
   props: ["data"],
   data() {
     return {
       input: ""
     };
+  },
+  created() {
+    console.log(this.data);
   },
   methods: {}
 };

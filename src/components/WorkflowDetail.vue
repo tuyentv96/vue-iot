@@ -59,7 +59,7 @@
                     <h4>triggerQuantifier</h4>
                   </div>
                 </el-col>
-                <el-col :span="6">
+                <el-col :span="10">
                   <div>
                     <h4>data</h4>
                   </div>
@@ -94,7 +94,7 @@
                     <p>{{ action.triggerQuantifier }}</p>
                   </div>
                 </el-col>
-                <el-col :span="6">
+                <el-col :span="10">
                   <div v-if="action.actionType == 'Console'">
                     <c-console :data="action.actionData.System_ConsoleData"></c-console>
                   </div>
