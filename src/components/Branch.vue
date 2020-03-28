@@ -1,7 +1,7 @@
 <template>
   <div class="branch__wrapper">
     <el-col>
-      <c-condition :condition="data" />
+      <c-condition :condition="data" :attrs="attrs" />
     </el-col>
   </div>
 </template>
@@ -17,7 +17,7 @@ export default {
     [Col.name]: Col,
     [CCondition.name]: CCondition
   },
-  props: ["data"],
+  props: ["data", "attrs"],
   data() {
     return {
       input: ""

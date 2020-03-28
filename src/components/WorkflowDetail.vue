@@ -106,7 +106,7 @@
                     <c-email :data="action.actionData.System_EmailData"></c-email>
                   </div>
                   <div v-if="action.actionType == 'Branch'">
-                    <c-branch :data="action.actionData.System_BranchData"></c-branch>
+                    <c-branch :data="action.actionData.System_BranchData" :attrs="attrs"></c-branch>
                   </div>
                 </el-col>
                 <el-col :span="3">
@@ -203,7 +203,8 @@ export default {
   },
   computed: mapGetters({
     workflow: "getWorkflow",
-    actions: "getActions"
+    actions: "getActions",
+    attrs: "getAttrs"
   })
 };
 </script>
