@@ -11,7 +11,7 @@ import CCondition from "@/components/Condition.vue";
 import { Row, Col } from "element-ui";
 
 export default {
-  name: "c-branch",
+  name: "c-action",
   components: {
     [Row.name]: Row,
     [Col.name]: Col,
@@ -22,6 +22,9 @@ export default {
       required: true
     },
     attrs: {
+      required: true
+    },
+    type: {
       required: true
     }
   },

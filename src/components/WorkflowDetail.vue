@@ -31,6 +31,7 @@
           </el-tab-pane>
 
           <el-tab-pane class="tab_content" label="Actions">
+            <el-button @click="saveActions" type="primary">Save</el-button>
             <div>
               <!-- <el-table :data="actions">
                 <el-table-column prop="ID" label="ID"></el-table-column>
@@ -106,7 +107,11 @@
                     <c-email :data="action.actionData.System_EmailData"></c-email>
                   </div>
                   <div v-if="action.actionType == 'Branch'">
-                    <c-branch :data="action.actionData.System_BranchData" :attrs="attrs"></c-branch>
+                    <c-branch
+                      :data="action.actionData.System_BranchData"
+                      :attrs="attrs"
+                      @update="update"
+                    ></c-branch>
                   </div>
                 </el-col>
                 <el-col :span="3">
@@ -148,9 +153,25 @@ export default {
     ...mapActions({
       actFetchWorkflowByID: "actFetchWorkflowByID",
       actFetchActionsByWorkflowID: "actFetchActionsByWorkflowID",
-      actFetchAttributesByClassID: "actFetchAttributesByClassID"
+      actFetchAttributesByClassID: "actFetchAttributesByClassID",
+      actUpdateActions: "actUpdateActions",
+      actUpdateAction: "actUpdateAction"
     }),
-    saveWorkflow() {}
+    saveWorkflow() {},
+    saveActions() {},
+    update(data) {
+      console.log("update actions meta:", data);
+      // this.actUpdateActions({
+      //   workflowID: this.$route.params.workflowID,
+      //   payload: data
+      // });
+      console.log("wfdata:", this.actions);
+      this.actUpdateAction({
+        workflowID: this.$route.params.workflowID,
+        actionID: data.actionID,
+        payload: data
+      }).then(this.actFetchActionsByWorkflowID(this.$route.params.workflowID));
+    }
   },
   created() {
     this.actFetchWorkflowByID({

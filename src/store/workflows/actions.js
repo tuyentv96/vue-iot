@@ -30,5 +30,22 @@ export const actions = {
       .then(res => {
         commit(MUTATE_ACTION_LIST, res.data);
       });
+  },
+  actUpdateActions({ commit }, { workflowID, payload }) {
+    return axios
+      .put(
+        `${process.env.VUE_APP_URL}/workflows/${workflowID}/actions/batch`,
+        payload
+      )
+      .then(res => {
+        commit(MUTATE_ACTION_LIST, res.data);
+      });
+  },
+  actUpdateAction(noneUse, { workflowID, actionID, payload }) {
+    return axios
+      .put(
+        `${process.env.VUE_APP_URL}/workflows/${workflowID}/actions/${actionID}`,
+        payload
+      )
   }
 };

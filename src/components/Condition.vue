@@ -3,26 +3,22 @@
     <el-row>
       <div class="mySlides" v-for="(exp) in exps" v-bind:key="exp.ID">
         <el-row :gutter="4">
-          <el-col :span="10">
-            <!-- <el-input placeholder="Please input"></el-input> -->
-            <p>{{exp.var}}</p>
-          </el-col>
-
           <el-col :span="4">
-            <!-- <el-dropdown>
-              <span class="el-dropdown-link">List</span>
-              <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item>Action 1</el-dropdown-item>
-                <el-dropdown-item>Action 2</el-dropdown-item>
-                <el-dropdown-item>Action 3</el-dropdown-item>
-              </el-dropdown-menu>
-            </el-dropdown>-->
-            <p>{{exp.op}}</p>
+            <el-input v-model="exp.quantifier"></el-input>
+            <!-- <p>{{exp.var}}</p> -->
+          </el-col>
+          <el-col :span="9">
+            <el-input v-model="exp.var"></el-input>
+            <!-- <p>{{exp.var}}</p> -->
           </el-col>
 
-          <el-col :span="10">
-            <!-- <el-input placeholder="input"></el-input> -->
-            <p>{{exp.val}}</p>
+          <el-col :span="2">
+            <el-input v-model="exp.op"></el-input>
+          </el-col>
+
+          <el-col :span="9">
+            <el-input v-model="exp.val"></el-input>
+            <!-- <p>{{exp.val}}</p> -->
           </el-col>
         </el-row>
       </div>
@@ -73,7 +69,14 @@ export default {
     [Col.name]: Col,
     [COption.name]: COption
   },
-  props: ["condition", "attrs"],
+  props: {
+    condition: {
+      required: true
+    },
+    attrs: {
+      required: true
+    }
+  },
   data() {
     return {
       input: "",
@@ -81,36 +84,69 @@ export default {
     };
   },
   methods: {
+    makeCond() {
+      let cond;
+      this.exps.forEach((exp, i) => {
+        if (i == 0) {
+          cond = {
+            var: exp.var,
+            op: exp.op,
+            val: exp.val
+          };
+        } else {
+          cond = {
+            comparator: exp.quantifier == "AND" ? "&&" : "||",
+            rules: [
+              { ...cond },
+              {
+                op: exp.op,
+                val: exp.val,
+                var: exp.var
+              }
+            ]
+          };
+        }
+      });
+
+      console.log("cond =>>>", cond);
+    },
     createClass() {
       console.log("TEST");
     },
     addExp() {
       console.log("Add exp");
       let newCondition;
-      // if (!this.condition.rules) {
-      //   this.condition.rules.push({
-      //     var: "",
-      //     op: "",
-      //     val: ""
-      //   });
-      //   newCondition = this.condition;
-      // } else {
-      newCondition = {
-        comparator: "&&",
-        rules: [
-          { ...this.condition },
-          {
-            op: "",
-            val: "",
-            var: ""
-          }
-        ]
-      };
-      //}
+      if (
+        this.condition.comparator &&
+        this.condition.var &&
+        this.condition.op &&
+        this.condition.val
+      ) {
+        this.condition = {
+          var: "",
+          op: "",
+          val: ""
+        };
+        newCondition = this.condition;
+      } else {
+        newCondition = {
+          comparator: "&&",
+          rules: [
+            { ...this.condition },
+            {
+              op: "",
+              val: "",
+              var: ""
+            }
+          ]
+        };
+      }
 
       console.log(newCondition);
-      this.condition = newCondition;
-      this.renderCond();
+      // this.condition = newCondition;
+      this.renderCond(newCondition);
+      this.makeCond();
+      this.$emit("update-cond", newCondition);
     },
     subExp(path) {
       if (this.condition.rules) {
@@ -161,8 +197,8 @@ export default {
         // console.log("comp:", comp);
       }
     },
-    renderCond() {
-      this.explainCond(this.condition, undefined, false, []);
+    renderCond(newCondition) {
+      this.explainCond(newCondition, undefined, false, []);
     },
     getTypeParam(attrName) {
       console.log("attrs:", this.attrs);
@@ -223,7 +259,6 @@ export default {
       }
     }
   },
-
   created() {
     // this.addExp();
     this.explainCond(this.condition, undefined, false, []);
