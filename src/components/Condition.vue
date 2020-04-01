@@ -84,6 +84,32 @@ export default {
     };
   },
   methods: {
+    getCurrentCond() {
+      let cond;
+      this.exps.forEach((exp, i) => {
+        if (i == 0) {
+          cond = {
+            var: exp.var,
+            op: exp.op,
+            val: exp.val
+          };
+        } else {
+          cond = {
+            comparator: exp.quantifier == "AND" ? "&&" : "||",
+            rules: [
+              { ...cond },
+              {
+                op: exp.op,
+                val: exp.val,
+                var: exp.var
+              }
+            ]
+          };
+        }
+      });
+
+      return cond;
+    },
     makeCond() {
       let cond;
       this.exps.forEach((exp, i) => {
@@ -142,10 +168,10 @@ export default {
         };
       }
 
-      console.log(newCondition);
-      // this.condition = newCondition;
+      this.condition = newCondition;
       this.renderCond(newCondition);
-      this.makeCond();
+      //this.makeCond();
+      console.log("new cond", newCondition);
       this.$emit("update-cond", newCondition);
     },
     subExp(path) {
@@ -198,6 +224,7 @@ export default {
       }
     },
     renderCond(newCondition) {
+      this.exps = [];
       this.explainCond(newCondition, undefined, false, []);
     },
     getTypeParam(attrName) {

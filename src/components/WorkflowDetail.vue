@@ -77,8 +77,9 @@
 
               <el-row
                 class="element__row-customized"
-                v-for="action in actions"
+                v-for="(action,index) in actions"
                 v-bind:key="action.ID"
+                ref="actions"
               >
                 <el-col :span="2">
                   <div>
@@ -108,7 +109,8 @@
                   </div>
                   <div v-if="action.actionType == 'Branch'">
                     <c-branch
-                      :data="action.actionData.System_BranchData"
+                      :index="index"
+                      :data="action.actionData"
                       :attrs="attrs"
                       @update="update"
                     ></c-branch>
@@ -158,19 +160,24 @@ export default {
       actUpdateAction: "actUpdateAction"
     }),
     saveWorkflow() {},
-    saveActions() {},
-    update(data) {
-      console.log("update actions meta:", data);
+    saveActions() {
+      console.log("REF", this.$refs);
+      this.actions.forEach((element, index) => {
+        console.log("index:", element, this.$refs[`element${index}`].getData());
+      });
+      this.actUpdateActions({
+        workflowID: this.$route.params.workflowID,
+        payload: this.actions
+      }).then(this.actFetchActionsByWorkflowID(this.$route.params.workflowID));
+    },
+    update(index, actionData) {
+      console.log("update actions meta:", index, actionData);
       // this.actUpdateActions({
       //   workflowID: this.$route.params.workflowID,
       //   payload: data
       // });
-      console.log("wfdata:", this.actions);
-      this.actUpdateAction({
-        workflowID: this.$route.params.workflowID,
-        actionID: data.actionID,
-        payload: data
-      }).then(this.actFetchActionsByWorkflowID(this.$route.params.workflowID));
+      this.actions[index].actionData = actionData;
+      console.log("wfdata:", this.actions[index]);
     }
   },
   created() {
