@@ -7,7 +7,7 @@
             <el-input v-model="exp.quantifier"></el-input>
             <!-- <p>{{exp.var}}</p> -->
           </el-col>
-          <el-col :span="9">
+          <el-col @input.native="change" :span="9">
             <el-input v-model="exp.var"></el-input>
             <!-- <p>{{exp.var}}</p> -->
           </el-col>
@@ -84,6 +84,9 @@ export default {
     };
   },
   methods: {
+    change(data) {
+      console.log("changed:", data);
+    },
     getCurrentCond() {
       let cond;
       this.exps.forEach((exp, i) => {
