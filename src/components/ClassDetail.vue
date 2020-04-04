@@ -229,19 +229,19 @@ export default {
       ],
       dataTypeOptions: [
         {
-          value: "Number",
+          value: "number",
           label: "Number"
         },
         {
-          value: "String",
+          value: "string",
           label: "String"
         },
         {
-          value: "Boolean",
+          value: "boolean",
           label: "Boolean"
         },
         {
-          value: "Email",
+          value: "email",
           label: "Email"
         }
       ],
