@@ -25,7 +25,7 @@
     </el-row>
 
     <el-row>
-      <el-button @click="addExp" type="primary">Confirm</el-button>
+      <el-button @click="addExp" type="success">ADD</el-button>
     </el-row>
   </div>
 </template>

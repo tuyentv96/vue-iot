@@ -1,5 +1,32 @@
 <template>
   <div class="container">
+    <el-dialog title="Edit Action" :visible.sync="editActionDialogVisible">
+      <el-form :model="action">
+        <div v-if="action.actionType == 'Console'">
+          <c-console :data="action.actionData.System_ConsoleData"></c-console>
+        </div>
+        <div v-if="action.actionType == 'GoTo'">
+          <p>{{ action.acceptActionID}}</p>
+        </div>
+        <div v-if="action.actionType == 'SendEmail'">
+          <c-email :data="action.actionData.System_EmailData"></c-email>
+        </div>
+        <div v-if="action.actionType == 'Branch'">
+          <c-branch
+            ref="branchAction"
+            :index="action.ID"
+            :data="action.actionData.System_BranchData"
+            :attrs="attrs"
+            @update="update"
+          ></c-branch>
+        </div>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="editActionDialogVisible = false">Cancel</el-button>
+        <el-button @click="updateAction" type="primary">Confirm</el-button>
+      </span>
+    </el-dialog>
+
     <el-row>
       <el-col id="content">
         <el-tabs style="width: 100%">
@@ -33,17 +60,6 @@
           <el-tab-pane class="tab_content" label="Actions">
             <el-button @click="saveActions" type="primary">Save</el-button>
             <div>
-              <!-- <el-table :data="actions">
-                <el-table-column prop="ID" label="ID"></el-table-column>
-                <el-table-column prop="actionType" label="actionType"></el-table-column>
-                <el-table-column prop="triggerQuantifier" label="triggerQuantifier"></el-table-column>
-                <el-table-column label="data">
-                  <div>{{actionData.System_ConsoleData}}</div>
-                </el-table-column>
-                <el-table-column prop="acceptActionID" label="Accept ActionID"></el-table-column>
-                <el-table-column prop="createdAt" label="createdAt"></el-table-column>
-                <el-table-column prop="updatedAt" label="updatedAt"></el-table-column>
-              </el-table>-->
               <el-row class="element__row-customized" style="font-family: 'Gotham-Bold'">
                 <el-col :span="2">
                   <div>
@@ -97,24 +113,28 @@
                   </div>
                 </el-col>
                 <el-col :span="10">
-                  <div v-if="action.actionType == 'Console'">
-                    <c-console :data="action.actionData.System_ConsoleData"></c-console>
-                  </div>
-                  <div v-if="action.actionType == 'GoTo'">
-                    <p>{{ action.acceptActionID}}</p>
-                  </div>
-                  <div v-if="action.actionType == 'SendEmail'">
-                    <!-- <p>{{ action.actionData.System_EmailData}}</p> -->
-                    <c-email :data="action.actionData.System_EmailData"></c-email>
-                  </div>
-                  <div v-if="action.actionType == 'Branch'">
-                    <c-branch
-                      :index="index"
-                      :data="action.actionData"
-                      :attrs="attrs"
-                      @update="update"
-                    ></c-branch>
-                  </div>
+                  <el-row>
+                    <div v-if="action.actionType == 'Console'">
+                      <c-console :data="action.actionData.System_ConsoleData"></c-console>
+                    </div>
+                    <div v-if="action.actionType == 'GoTo'">
+                      <p>{{ action.acceptActionID}}</p>
+                    </div>
+                    <div v-if="action.actionType == 'SendEmail'">
+                      <c-email :data="action.actionData.System_EmailData"></c-email>
+                    </div>
+                    <div v-if="action.actionType == 'Branch'">
+                      <c-branch
+                        :index="index"
+                        :data="action.actionData.System_BranchData"
+                        :attrs="attrs"
+                        @update="update"
+                      ></c-branch>
+                    </div>
+                  </el-row>
+                  <el-row>
+                    <el-button @click="editAction(index)" type="primary">Edit</el-button>
+                  </el-row>
                 </el-col>
                 <el-col :span="3">
                   <div>
@@ -160,24 +180,52 @@ export default {
       actUpdateAction: "actUpdateAction"
     }),
     saveWorkflow() {},
-    saveActions() {
-      console.log("REF", this.$refs);
-      this.actions.forEach((element, index) => {
-        console.log("index:", element, this.$refs[`element${index}`].getData());
+    updateAction() {
+      console.log("update action");
+      if (this.action.actionType == "Branch") {
+        console.log("ACTION BRANCH");
+        console.log(this.$refs.branchAction.getData());
+        this.action.actionData.System_BranchData = this.$refs.branchAction.getData();
+      }
+      this.actUpdateAction({
+        workflowID: this.$route.params.workflowID,
+        actionID: this.action.ID,
+        payload: this.action
+      }).then(res => {
+        console.log("action after update:", res.data);
+        this.editActionDialogVisible = false;
+        let action = this.actions.find(action => action.ID == res.data.ID);
+        if (action) {
+          action = res.data;
+          this.actions = [];
+        }
       });
+    },
+    editAction(index) {
+      this.action = this.actions[index];
+      this.editActionDialogVisible = true;
+      console.log("edit actions:", index, this.action);
+    },
+    saveActions() {
+      console.log("data", this.actions);
+
+      // console.log("REF", this.$refs);
+      // this.actions.forEach((element, index) => {
+      //   console.log("index:", element, this.$refs[`element${index}`].getData());
+      // });
       this.actUpdateActions({
         workflowID: this.$route.params.workflowID,
         payload: this.actions
       }).then(this.actFetchActionsByWorkflowID(this.$route.params.workflowID));
     },
-    update(index, actionData) {
-      console.log("update actions meta:", index, actionData);
+    update(actionData) {
+      console.log("update actions meta:", actionData);
       // this.actUpdateActions({
       //   workflowID: this.$route.params.workflowID,
       //   payload: data
       // });
-      this.actions[index].actionData = actionData;
-      console.log("wfdata:", this.actions[index]);
+      this.action.actionData = actionData;
+      console.log("wfdata:", this.action);
     }
   },
   created() {
@@ -190,6 +238,8 @@ export default {
   },
   data() {
     return {
+      action: {},
+      editActionDialogVisible: false,
       fullscreenLoading: false,
       treeData: {
         name: "root",

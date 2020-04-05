@@ -7,18 +7,26 @@
 
     <el-row :gutter="20">
       <el-col :span="4">
-        <p>Email</p>
+        <p>SendTo</p>
       </el-col>
       <el-col :span="17" :offset="3">
-        <el-input v-model="data.Email"></el-input>
+        <el-input v-model="data.sendTo"></el-input>
       </el-col>
     </el-row>
     <el-row :gutter="20">
       <el-col :span="4">
-        <p>Content</p>
+        <p>Subject</p>
       </el-col>
       <el-col :span="17" :offset="3">
-        <el-input v-model="data.Content"></el-input>
+        <el-input v-model="data.subject"></el-input>
+      </el-col>
+    </el-row>
+    <el-row :gutter="20">
+      <el-col :span="4">
+        <p>Body</p>
+      </el-col>
+      <el-col :span="17" :offset="3">
+        <el-input v-model="data.body"></el-input>
       </el-col>
     </el-row>
   </div>

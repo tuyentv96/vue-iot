@@ -1,12 +1,7 @@
 <template>
   <div class="branch__wrapper">
     <el-col>
-      <c-condition
-        ref="cond"
-        :condition="data.System_BranchData"
-        :attrs="attrs"
-        @update-cond="update"
-      />
+      <c-condition ref="cond" :condition="data" :attrs="attrs" @update-cond="update" />
     </el-col>
   </div>
 </template>
@@ -42,13 +37,17 @@ export default {
     getData() {
       let cond = this.$refs.cond.getCurrentCond();
       console.log("getdata:", cond);
+      return cond;
     },
     update(cond) {
       console.log("update branch data:", cond);
       let newData = this.data;
       newData.System_BranchData = cond;
-      this.$emit("update", this.index, newData);
+      this.$emit("update", newData);
     }
+  },
+  created() {
+    console.log("BRANCHHHHH:", this.data);
   }
 };
 </script>
