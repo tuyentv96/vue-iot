@@ -1,7 +1,7 @@
 <template>
   <div class="branch__wrapper">
     <el-col>
-      <c-condition ref="cond" :condition="data" :attrs="attrs"  />
+      <c-condition ref="cond" :condition="data" :attrs="attrs" />
     </el-col>
   </div>
 </template>
@@ -36,12 +36,8 @@ export default {
   methods: {
     getData() {
       let cond = this.$refs.cond.getCurrentCond();
-      console.log("getdata:", cond);
       return cond;
     }
-  },
-  created() {
-    console.log("BRANCHHHHH:", this.data);
   }
 };
 </script>

@@ -6,7 +6,10 @@
           <c-console :data="action.actionData.System_ConsoleData"></c-console>
         </div>
         <div v-if="action.actionType == 'GoTo'">
-          <p>{{ action.acceptActionID}}</p>
+          <c-goto :data="action.acceptActionID"></c-goto>
+        </div>
+        <div v-if="action.actionType == 'Sleep'">
+          <c-sleep :data="action.actionData.System_SleepData"></c-sleep>
         </div>
         <div v-if="action.actionType == 'SendEmail'">
           <c-email :data="action.actionData.System_EmailData"></c-email>
@@ -119,6 +122,9 @@
                     <div v-if="action.actionType == 'GoTo'">
                       <p>{{ action.acceptActionID}}</p>
                     </div>
+                    <div v-if="action.actionType == 'Sleep'">
+                      <c-sleep :data="action.actionData.System_SleepData"></c-sleep>
+                    </div>
                     <div v-if="action.actionType == 'SendEmail'">
                       <c-email :data="action.actionData.System_EmailData"></c-email>
                     </div>
@@ -160,6 +166,8 @@ import TreeChart from "vue-tree-chart";
 import CConsole from "@/components/Console.vue";
 import CEmail from "@/components/Email.vue";
 import CBranch from "@/components/Branch.vue";
+import CSleep from "@/components/Sleep.vue";
+import CGoto from "@/components/Goto.vue";
 
 export default {
   name: "workflow-detail",
@@ -167,7 +175,9 @@ export default {
     TreeChart,
     [CConsole.name]: CConsole,
     [CEmail.name]: CEmail,
-    [CBranch.name]: CBranch
+    [CBranch.name]: CBranch,
+    [CSleep.name]: CSleep,
+    [CGoto.name]: CGoto
   },
   methods: {
     ...mapActions({
@@ -215,7 +225,7 @@ export default {
         workflowID: this.$route.params.workflowID,
         payload: this.actions
       }).then(this.actFetchActionsByWorkflowID(this.$route.params.workflowID));
-    },
+    }
   },
   created() {
     this.actFetchWorkflowByID({

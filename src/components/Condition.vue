@@ -5,11 +5,9 @@
         <el-row :gutter="4">
           <el-col :span="4">
             <el-input v-model="exp.quantifier"></el-input>
-            <!-- <p>{{exp.var}}</p> -->
           </el-col>
-          <el-col @input.native="change" :span="8">
+          <el-col :span="8">
             <el-input v-model="exp.var"></el-input>
-            <!-- <p>{{exp.var}}</p> -->
           </el-col>
 
           <el-col :span="2">
@@ -18,7 +16,6 @@
 
           <el-col :span="8">
             <el-input v-model="exp.val"></el-input>
-            <!-- <p>{{exp.val}}</p> -->
           </el-col>
           <el-col :span="2">
             <el-button @click="deleteExp(index)" type="primary" icon="el-icon-remove"></el-button>
@@ -87,9 +84,6 @@ export default {
     };
   },
   methods: {
-    change(data) {
-      console.log("changed:", data);
-    },
     getCurrentCond() {
       let cond;
       this.exps.forEach((exp, i) => {
@@ -139,15 +133,9 @@ export default {
           };
         }
       });
-
-      console.log("cond =>>>", cond);
-    },
-    createClass() {
-      console.log("TEST");
     },
     addExp() {
-      console.log("Add exp");
-      let currentCond=this.getCurrentCond();
+      let currentCond = this.getCurrentCond();
       let newCondition;
       if (
         currentCond.comparator &&
@@ -176,12 +164,9 @@ export default {
       }
 
       this.renderCond(newCondition);
-      //this.makeCond();
-      console.log("new cond", newCondition);
-      // this.$emit("update-cond", newCondition);
     },
-    deleteExp(index){
-      this.exps.splice(index,1)
+    deleteExp(index) {
+      this.exps.splice(index, 1);
     },
     subExp(path) {
       if (this.condition.rules) {
@@ -211,9 +196,6 @@ export default {
           const subPath = path ? path.slice(0) : [];
           subPath.push("rules");
           subPath.push(i);
-          // console.log("rule:", rule);
-          // console.log("subPath:", subPath);
-          // console.log("quantifierSelector:", quantifierSelector);
           return this.explainCond(rule, quantifierSelector, true, subPath);
         });
       } else {
@@ -227,9 +209,6 @@ export default {
           op: Op,
           val: Val
         });
-        console.log("exps:", this.exps);
-        // console.log("Array.isArray(comp.rules):", Array.isArray(comp.rules));
-        // console.log("comp:", comp);
       }
     },
     renderCond(newCondition) {
@@ -296,9 +275,7 @@ export default {
     }
   },
   created() {
-    // this.addExp();
-    console.log("rendor exps")
-    this.exps=[];
+    this.exps = [];
     this.explainCond(this.condition, undefined, false, []);
   }
 };
