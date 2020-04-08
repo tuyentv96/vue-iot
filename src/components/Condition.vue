@@ -1,13 +1,13 @@
 <template>
   <div>
     <el-row>
-      <div class="mySlides" v-for="(exp) in exps" v-bind:key="exp.ID">
+      <div class="mySlides" v-for="(exp,index) in exps" v-bind:key="exp.ID">
         <el-row :gutter="4">
           <el-col :span="4">
             <el-input v-model="exp.quantifier"></el-input>
             <!-- <p>{{exp.var}}</p> -->
           </el-col>
-          <el-col @input.native="change" :span="9">
+          <el-col @input.native="change" :span="8">
             <el-input v-model="exp.var"></el-input>
             <!-- <p>{{exp.var}}</p> -->
           </el-col>
@@ -16,9 +16,12 @@
             <el-input v-model="exp.op"></el-input>
           </el-col>
 
-          <el-col :span="9">
+          <el-col :span="8">
             <el-input v-model="exp.val"></el-input>
             <!-- <p>{{exp.val}}</p> -->
+          </el-col>
+          <el-col :span="2">
+            <el-button @click="deleteExp(index)" type="primary" icon="el-icon-remove"></el-button>
           </el-col>
         </el-row>
       </div>
@@ -144,24 +147,25 @@ export default {
     },
     addExp() {
       console.log("Add exp");
+      let currentCond=this.getCurrentCond();
       let newCondition;
       if (
-        this.condition.comparator &&
-        this.condition.var &&
-        this.condition.op &&
-        this.condition.val
+        currentCond.comparator &&
+        currentCond.var &&
+        currentCond.op &&
+        currentCond.val
       ) {
-        this.condition = {
+        currentCond = {
           var: "",
           op: "",
           val: ""
         };
-        newCondition = this.condition;
+        newCondition = currentCond;
       } else {
         newCondition = {
           comparator: "&&",
           rules: [
-            { ...this.condition },
+            { ...currentCond },
             {
               op: "",
               val: "",
@@ -171,11 +175,13 @@ export default {
         };
       }
 
-      this.condition = newCondition;
       this.renderCond(newCondition);
       //this.makeCond();
       console.log("new cond", newCondition);
-      this.$emit("update-cond", newCondition);
+      // this.$emit("update-cond", newCondition);
+    },
+    deleteExp(index){
+      this.exps.splice(index,1)
     },
     subExp(path) {
       if (this.condition.rules) {
@@ -291,6 +297,8 @@ export default {
   },
   created() {
     // this.addExp();
+    console.log("rendor exps")
+    this.exps=[];
     this.explainCond(this.condition, undefined, false, []);
   }
 };
